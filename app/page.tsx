@@ -1,65 +1,128 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
-}
+import React, { useState } from 'react';
+
+// O componente principal da nossa ToDo List
+export default function ToDoList() {
+
+    // 1. CORREÇÃO: Nomeando o estado principal como 'tasks' (plural)
+    const [tasks, setTasks] = useState([]);
+    const [newTaskText, setNewTaskText] = useState('');
+
+    // Função para Adicionar Tarefa
+    const handleAddTask = () => {
+        if (newTaskText.trim() === '') {
+            alert('Por favor, digite o nome da tarefa.');
+            return;
+        }
+
+        const newTask = {
+            id: Date.now(),
+            text: newTaskText,
+            completed: false,
+        };
+
+        // 2. CORREÇÃO: Sintaxe correta para adicionar o novo item ao array
+        setTasks((prevTasks) => [...prevTasks, newTask]);
+        setNewTaskText('');
+    };
+
+    // 3. IMPLEMENTAÇÃO: Marcar/Desmarcar como Concluído (APENAS LÓGICA DE DADOS)
+    const handleToggleTask = (taskId) => {
+        const updatedTasks = tasks.map((task) => {
+            if (task.id === taskId) {
+                // APENAS RETORNA o NOVO OBJETO com o status invertido
+                return { ...task, completed: !task.completed };
+            }
+            return task;
+        });
+
+        // Atualiza o estado
+        setTasks(updatedTasks);
+    };
+
+    const handleDeleteTask = (taskId) => {
+        // Implementaremos no próximo passo
+        const remainingTasks = tasks.filter((task) => task.id !== taskId);
+
+        setTasks(remainingTasks);
+    };
+
+    return(
+        <main style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+            <h1>Lista de Tarefas (Next/React)</h1>
+
+            {/* Área de Criação de Tarefa */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px'}}>
+                <input
+                    type="text"
+                    placeholder="Nova tarefa..."
+                    style={{ padding: '10px', flexGrow: 1 }}
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                />
+                <button
+                    onClick={handleAddTask}
+                    style={{ padding: '10px 20px', cursor: 'pointer' }}
+                >
+                    Adicionar
+                </button>
+            </div>
+
+            {/* Área de Listagem de Tarefas */}
+            <ul style={{ listStyle: 'none', padding:0 }}>
+                {tasks.map((task) => ( // 4. CORREÇÃO: Usando o .map() corretamente
+                    <li
+                        key={task.id}
+                        style={{
+                            display:'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '10px',
+                            borderBottom: "1px solid #eee"
+                        }}
+                    >
+                        {/* Exibição do texto */}
+                        <span
+                            style={{
+                                textDecoration: task.completed ? 'line-through' : 'none',
+                                color: task.completed ? '#aaa' : '#000',
+                                flexGrow: 1,
+                                marginRight: '10px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
+                            }}
+                        >
+                            {task.completed && (
+                                <span role="img" aria-label="Concluído">
+                                    ✅
+                                </span>
+                            )}
+                            {task.text}
+                        </span>
+                        {/* Ações (botões de concluir e Excluir) */}
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                            <button
+                                onClick={() => handleToggleTask(task.id)}
+                                style={{ padding: '5px 10px', cursor: 'pointer' }}
+                            >
+                                {/* Lógica Condicional para o Botão */}
+                                {task.completed ? 'Desfazer' : 'Concluir'}
+                            </button>
+                            
+                            <button
+                                onClick={() => handleDeleteTask(task.id)}
+                                style={{ padding: '5px 10px', cursor: 'pointer', backgroundColor: 'red', color: 'white', border: 'none' }}
+                            >
+                                Excluir
+                            </button>
+                        </div>
+                    </li>
+                ))}
+                
+                {tasks.length === 0 && <p style={{ textAlign: 'center', color: '#555' }}>Nenhuma tarefa adicionada ainda.</p>}
+            </ul>
+        </main>
+    );
+};
