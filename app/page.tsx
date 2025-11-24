@@ -2,11 +2,17 @@
 
 import React, { useState } from 'react';
 
+export interface Task {
+      id: number; 
+      text: string; 
+      completed: boolean; 
+    }
+
 // O componente principal da nossa ToDo List
 export default function ToDoList() {
 
     // 1. CORREÇÃO: Nomeando o estado principal como 'tasks' (plural)
-    const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [newTaskText, setNewTaskText] = useState('');
 
     // Função para Adicionar Tarefa
@@ -28,7 +34,7 @@ export default function ToDoList() {
     };
 
     // 3. IMPLEMENTAÇÃO: Marcar/Desmarcar como Concluído (APENAS LÓGICA DE DADOS)
-    const handleToggleTask = (taskId) => {
+    const handleToggleTask = (taskId:number) => {
         const updatedTasks = tasks.map((task) => {
             if (task.id === taskId) {
                 // APENAS RETORNA o NOVO OBJETO com o status invertido
@@ -41,7 +47,7 @@ export default function ToDoList() {
         setTasks(updatedTasks);
     };
 
-    const handleDeleteTask = (taskId) => {
+    const handleDeleteTask = (taskId:number) => {
         // Implementaremos no próximo passo
         const remainingTasks = tasks.filter((task) => task.id !== taskId);
 
