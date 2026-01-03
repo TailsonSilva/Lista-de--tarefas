@@ -3,9 +3,10 @@
 import { Tasks } from "@/app/generated/prisma/client";
 import db from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/app/lib/prisma";
 
 export async function createTask(formData: FormData): Promise<Tasks> {
-    
+
     // 1. Extrair os dados do FormData
     const text = formData.get('taskText') as string;
 
@@ -27,11 +28,11 @@ export async function createTask(formData: FormData): Promise<Tasks> {
         // 4. Revalidação de Cache (Opcional, mas recomendado para Next.js)
         // Se você estiver usando o 'use client' para listar as tarefas, pode pular isso.
         // Se a listagem estiver em um Server Component, descomente.
-        revalidatePath('/'); 
+        revalidatePath('/');
 
         // 5. Retorna a tarefa criada
         // Note que o tipo de retorno do Prisma.tasks.create é compatível com nossa interface Task.
-        return newTask as Tasks; 
+        return newTask as Tasks;
 
     } catch (error) {
         console.error("Erro ao criar tarefa:", error);

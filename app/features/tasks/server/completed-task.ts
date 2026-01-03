@@ -2,19 +2,21 @@
 
 import { Tasks } from "@/app/generated/prisma/client";
 import db from "@/app/lib/prisma";
+import { revalidatePath } from "next/cache";
 
-export async function updateTaskCompletion(id: number, completed: boolean): Promise<Tasks> {
+export async function updateTaskCompletion(id: number, currentStatus: boolean) {
     try {
-        const updatedTask = await db.tasks.update({
-            where: { id },
-            data: { completed: completed }, // Define o novo status
+        await db.tasks.update({
+            where: { id: id },
+            data: {
+                completed: !currentStatus
+            }
         });
 
-        // revalidatePath('/'); // Opcional: descomente se a listagem for Server Component
-
-        return updatedTask as Tasks;
+        // Atualiza a página para refletir a mudança
+        revalidatePath('/');
     } catch (error) {
-        console.error("Erro ao atualizar o status da tarefa:", error);
-        throw new Error(`Falha ao atualizar a tarefa com ID ${id}.`);
+        console.error("Erro ao atualizar tarefa:", error);
+        throw new Error("Falha ao atualizar status da tarefa.");
     }
 }
