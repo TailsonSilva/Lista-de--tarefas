@@ -1,18 +1,16 @@
-
-import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '../generated/prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const globalForPrisma = global as unknown as {
-    prisma: PrismaClient
+  prisma: PrismaClient | undefined
 }
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-})
-
-const db = globalForPrisma.prisma || new PrismaClient({
-  adapter,
-})
+// Na versão 7, passamos a URL aqui:
+export const db =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    // @ts-ignore
+    datasourceUrl: process.env.DATABASE_URL,
+  })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 
