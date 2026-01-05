@@ -1,6 +1,6 @@
 "use server"
 
-import { Tasks } from "@/app/generated/prisma/client";
+import { Tasks } from "@prisma/client";
 import db from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 
