@@ -4,12 +4,11 @@ const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined
 }
 
+// Na v7, se você já tem a DATABASE_URL no .env ou na Vercel, 
+// o Prisma Client já a lê automaticamente do schema.
 export const db =
   globalForPrisma.prisma ||
-  new PrismaClient({
-    // @ts-ignore - isso remove o erro vermelho se o TS local estiver teimoso
-    datasourceUrl: process.env.DATABASE_URL,
-  })
+  new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 
