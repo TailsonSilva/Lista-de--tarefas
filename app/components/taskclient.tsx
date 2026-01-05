@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createTask } from "../features/tasks/server/create-task";
 import { deleteTask } from "../features/tasks/server/delete-task";
 import { updateTaskCompletion } from "../features/tasks/server/completed-task";
-import { Tasks } from "../generated/prisma/client";
+import { Tasks } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 interface TaskClientProps {
