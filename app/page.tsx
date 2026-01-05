@@ -1,6 +1,6 @@
 import TaskClient from "./components/taskclient";
 import { getTasks } from "./features/tasks/server/get-tasks";
-import { Tasks } from "./generated/prisma/client";
+import { Tasks } from "@prisma/client";
 
 export default async function ToDoList() {
     // 1. Chama a Server Action para buscar os dados diretamente do banco
