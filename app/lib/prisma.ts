@@ -4,11 +4,10 @@ const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined
 }
 
-// Na versão 7, passamos a URL aqui:
 export const db =
   globalForPrisma.prisma ||
   new PrismaClient({
-    // @ts-ignore
+    // @ts-ignore - isso remove o erro vermelho se o TS local estiver teimoso
     datasourceUrl: process.env.DATABASE_URL,
   })
 
